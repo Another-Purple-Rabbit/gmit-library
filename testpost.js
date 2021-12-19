@@ -1,19 +1,32 @@
 const http = require('http');
 
-const data = '{"title":"Дорожные работы для чайников", "author":"А.Ноним", "category":"2", "amount":"5", "year":"2015", "publisher":"Худжанд"}';
+/*const data = {
+    surname: 'Рахмонкулов',
+    name: 'Оламафруз',
+    patronymic: 'Какеготамхзвович',
+    role: 1,
+    faculty: 2,
+    username: 'olam',
+    password: '540'
+};*/
+const data = {   
+    username: 'olam',
+    password: '540' };
+
+const body = JSON.stringify(data);
 let resBody = '';
 
 const req = http.request({
     host: 'localhost',
-    port: 8080,
-    path: '/api/books/add',
+    port: 9000,
+    path: '/api/users/auth',
     method: 'POST',
     headers: {
         'Content-Type':'application/json; charset=utf-8',
-        length: data.length
+        length: body.length
             }
     }, 
     (res) => {res.on('data', chunk => {resBody+=chunk}); console.log(resBody)});
 
-req.write(data);
+req.write(body);
 req.end();

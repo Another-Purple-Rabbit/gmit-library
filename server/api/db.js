@@ -10,8 +10,7 @@ const connPool = mysql.createPool({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME});
 
-
-let db = {};
+    let db = {};
 
 db.getAllBooks = () => {
     return new Promise((resolve, reject) => {
@@ -49,7 +48,28 @@ db.deleteBook = (id) => {
     });
 }
 
-db.addUser = (surname, name, patronymic='', type, faculty) => {
-
+db.authUser = (username) => {
+    return new Promise((resolve, reject) => {
+        connPool.query('SELECT user_id, password FROM auth WHERE username=?', [username], (err, res) => {
+            if (err) return reject(err);
+            return resolve(res);
+        })
+    })
 }
+
+db.addUser = (credentials) => {
+    const { name, surname, patronymic, role, faculty, username, passstring } = credentials;
+    return new Promise((resolve, reject) => {
+        connPool.query('INSERT INTO users (name, surname, patronymic, role, faculty) VALUES (?, ?, ?, ?, ?)', 
+                        [name, surname, patronymic, role, faculty], (err, res) => {
+                            if (err) return reject(err);
+                            connPool.query('INSERT INTO auth (user_id, username, password) VALUES (?, ? , ?)',
+                            [res.insertId, username, passstring], (err, res) => {
+                                if (err) return reject(err);
+                                return resolve(res);
+                            });
+                        });
+    });
+}
+
 export default db;
