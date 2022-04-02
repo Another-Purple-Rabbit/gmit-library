@@ -1,8 +1,8 @@
 import loc from '../loc/en.js';
 
 import {
-    EDIT_CHANGE,
-    USER_LOGIN_REQUEST,
+    LOGIN_ERROR,
+    ERASE_ERR_MES
 } from '../actions';
 
 export const initialState = {
@@ -16,39 +16,31 @@ export const initialState = {
         publisher: '',
         reg_date: Date.now(),
     },
-    user: {
-        id: null,
-        name: '',
-        surname: '',
-        patronimyc: '',
-        status: null,
-        login: '',
-        password:'',
-    },
-    loc
+    loc,
+    displayError: null,
 };
 
-export const reducer = (state = initialState, action) => {
+export const generalAppData = (state = initialState, action) => {
     switch (action.type) {
-        case EDIT_CHANGE:
-            return reduceChange(state, action);
-        case USER_LOGIN_REQUEST:
-            return reduceLogin(state, action);
+        case LOGIN_ERROR:
+            return reduceShowError(state, action)
+        case ERASE_ERR_MES:
+            return reduceErrorErase(state, action);
         default: return state;
     }
 };
 
-const reduceLogin = (state, action) => {
-    
+const reduceShowError = (state, action) => {
+    const { error } = action.payload;
+    let displayError;
+    switch (error) {
+        case 'UNF': displayError = loc.errors.userNotFound; break;
+        case 'UIP': displayError = loc.errors.userInvalidPass; break;
+        default: break;
+    }
+    return {...state, displayError};
 }
 
-const reduceChange = (state, action) => {
-    const { payload: {name, value} } = action;
-    switch (name) {
-        case ('login'):
-            return {...state, user: {...state.user, login: value}}
-        case ('pass'):
-            return {...state, user: {...state.user, password: value}}
-        default: return state;
-    }
+const reduceErrorErase = (state, action) => {
+    return {...state, error: null}
 }

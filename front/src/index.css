@@ -1,3 +1,7 @@
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: 'Cambria', 'Georgia', serif;
@@ -7,7 +11,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: url('./media/bckgr.png');
-  background-size: stretch;
+  background-size: cover;
+  height: 100%;
 }
 
 code {

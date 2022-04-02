@@ -1,0 +1,16 @@
+.login_wrapper {    
+    padding: 15px;
+    background-color: rgba(255,255,255,0.3);
+    min-height: 10vh;
+    width: 25vh;
+    display: flex;
+    justify-content: center;
+    font-size: calc(10px + 1vmin);
+    color: white;
+}
+
+.errWrap {
+    font-size: calc(10px+0.5vmin);
+    color: red;
+    font-weight: 100;
+}

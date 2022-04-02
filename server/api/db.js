@@ -9,8 +9,8 @@ const connPool = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME});
-
-    let db = {};
+    
+let db = {};
 
 db.getAllBooks = () => {
     return new Promise((resolve, reject) => {
@@ -48,6 +48,15 @@ db.deleteBook = (id) => {
     });
 }
 
+db.getSessionInfo = (id) => {
+    return new Promise((resolve, reject) => {
+        connPool.query('SELECT id, status FROM users WHERE id=?',[id], (err, result) => {
+            if (err) return reject(err);
+            return resolve(result);
+        })
+    })
+}
+
 db.authUser = (username) => {
     return new Promise((resolve, reject) => {
         connPool.query('SELECT user_id, password FROM auth WHERE username=?', [username], (err, res) => {
@@ -57,14 +66,25 @@ db.authUser = (username) => {
     })
 }
 
-db.addUser = (credentials) => {
-    const { name, surname, patronymic, role, faculty, username, passstring } = credentials;
+db.createSession = (params) => {
+    const { id, uid } = params;
     return new Promise((resolve, reject) => {
-        connPool.query('INSERT INTO users (name, surname, patronymic, role, faculty) VALUES (?, ?, ?, ?, ?)', 
-                        [name, surname, patronymic, role, faculty], (err, res) => {
+        connPool.query('INSERT INTO sessions (id, user_id, lifetime, created_date) VALUES (?, ?, ?, NOW())',
+                        [id, uid, 48], (err, res) => {
+                            if (err) return reject(err);
+                            return resolve(id);
+                        })
+    })
+}
+
+db.addUser = (credentials) => {
+    const { id, name, surname, patronymic, status, faculty, username, passstring } = credentials;
+    return new Promise((resolve, reject) => {
+        connPool.query('INSERT INTO users (id, name, surname, patronymic, status, faculty) VALUES (?, ?, ?, ?, ?, ?)', 
+                        [id, name, surname, patronymic, status, faculty], (err, res) => {
                             if (err) return reject(err);
                             connPool.query('INSERT INTO auth (user_id, username, password) VALUES (?, ? , ?)',
-                            [res.insertId, username, passstring], (err, res) => {
+                            [id, username, passstring], (err, res) => {
                                 if (err) return reject(err);
                                 return resolve(res);
                             });

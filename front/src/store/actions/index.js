@@ -1,17 +1,16 @@
-export const USER_LOGIN_REQUEST = 'USER_LOGIN';
+export const LOGIN_ERROR = 'LOGIN_ERROR';
+export const ERASE_ERR_MES = 'ERASE_ERR_MES';
 
-export const EDIT_CHANGE = 'EDIT_CHANGE';
-
-export const editChange = (name, value) => {
+export const loginError = (err) => {
     return {
-        type: EDIT_CHANGE,
-        payload: {name, value}
+        type: LOGIN_ERROR,
+        payload: err
     }
 }
 
-export const userLoginRequest = () => {
+export const eraseError = () => {
     return {
-        type: USER_LOGIN_REQUEST,
-        payload: {}
+        type: ERASE_ERR_MES,
+        payload: null
     }
 }

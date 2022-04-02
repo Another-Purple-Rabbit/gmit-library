@@ -16,7 +16,7 @@ servApp.use(cors()); //middleware to get rid of cors
 servApp.use(morgan('dev')); //middleware for request/response monitoring
 servApp.use('/api', apiRouter); //splicing the router in
 
-//firing app the serv
+//firing up the serv
 servApp.listen(process.env.SERVER_PORT, () => {
     console.log(`App running on port ${process.env.SERVER_PORT}`);
 });
