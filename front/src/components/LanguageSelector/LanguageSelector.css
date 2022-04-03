@@ -1,0 +1,22 @@
+.wrapper {
+    border: 0.5px solid grey;
+    background-color: rgba(47, 79, 79, 0.25);
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    width:fit-content;
+    height: fit-content;
+    padding:3px;
+    margin-left:auto;
+    align-self:flex-start;
+}
+
+img {
+    padding-left:0.5vh;
+    padding-right:0.5vh;
+    width: 3vh;
+}
+
+img:hover {
+    cursor: pointer;
+}

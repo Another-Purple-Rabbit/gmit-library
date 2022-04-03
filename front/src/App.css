@@ -11,9 +11,8 @@
 
 .header {
   grid-column: 1 / span 2;
-  justify-content: center;
-  align-content: center;
   border: dotted 1px red;
+  display: flex;
 }
 
 .header h1 {
@@ -29,10 +28,9 @@
   color:white;
 }
 
-.App-header {
-  min-height: 10vh;
-  display: flex;
-  justify-content: center;
-  font-size: calc(10px + 1vmin);
-  color: white;
+.logout {
+  color: blue;
+}
+.logout:hover {
+  cursor: pointer;
 }

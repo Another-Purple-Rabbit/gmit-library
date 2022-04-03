@@ -48,9 +48,9 @@ db.deleteBook = (id) => {
     });
 }
 
-db.getSessionInfo = (id) => {
+db.getSession = (sid) => {
     return new Promise((resolve, reject) => {
-        connPool.query('SELECT id, status FROM users WHERE id=?',[id], (err, result) => {
+        connPool.query('SELECT user_id, lifetime, created_date FROM sessions WHERE id=?',[sid], (err, result) => {
             if (err) return reject(err);
             return resolve(result);
         })
@@ -60,6 +60,17 @@ db.getSessionInfo = (id) => {
 db.authUser = (username) => {
     return new Promise((resolve, reject) => {
         connPool.query('SELECT user_id, password FROM auth WHERE username=?', [username], (err, res) => {
+            if (err) return reject(err);
+            return resolve(res);
+        })
+    })
+}
+
+db.getUserInfo = (uid) => {
+    return new Promise((resolve, reject) => {
+        connPool.query('SELECT surname, name, patronymic, status, faculty, reg_date FROM users WHERE id=?', 
+        [uid], 
+        (err, res) => {
             if (err) return reject(err);
             return resolve(res);
         })

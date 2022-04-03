@@ -28,6 +28,20 @@ apiRouter.get('/books/single/:bookId', (req, res) => {
   res.status(200).json(req.book);
 });
 
+apiRouter.param('uid', async (req, res, next, uid) => {
+  try {
+    const user = await db.getUserInfo(uid);
+    req.user = user;
+    next();
+  } catch (e) {
+    res.sendStatus(500);
+  }
+})
+
+apiRouter.get('/users/:uid', (req, res) => {
+  res.status(200).send(JSON.stringify(req.user[0]));
+})
+
 apiRouter.post('/books/add', async (req, res) => {
   const { title, author, category, amount, year, publisher } = req.body;
   try {
@@ -83,7 +97,18 @@ apiRouter.post('/users/auth', async (req, res) => {
 
 apiRouter.post('/users/session/check', async (req,res) => {
   const { sid } = req.body;
-  res.status(200).end(JSON.stringify({res:'Ok for now'}));
+  const session = await db.getSession(sid);
+  if (session.length !== 0) {
+    const created_time = session[0].created_date.getTime() / 1000;
+    const expiration_time = created_time + session[0].lifetime * 60;
+    if (Date.now().getTime / 1000 > expiration_time) {
+      res.status(200).end(JSON.stringify({status: 'expired'}));
+    } else {
+      res.status(200).end(JSON.stringify({status: 'alive', uid: session[0].user_id}));
+    }
+  } else {
+      res.status(200).end(JSON.stringify({status:'none'}));
+  }
 })
 
 export default apiRouter;
